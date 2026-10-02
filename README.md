@@ -1,9 +1,26 @@
 # tongubako
- 
-tongubako is a python library developed by Hogan Tong. tongubako is named after dogu-bako (どうぐばこ), which is tool box in Japanese. This library contains useful tools for research, data management, and other analytical activities.
 
-**htbbg**: A python package for Bloomberg API. It allows users to use classic Bloomberg functions such as BDH, BDP, BDS and BQL. It also adds a few useful functions that are based on the classic funtions.
+`tongubako` is Hogan Tong's collection of Python tools for market data, quantitative research, analytics, and charting. The name comes from *dogu-bako* (どうぐばこ), Japanese for toolbox.
 
-**htfred**: A python pakcage for FRED API. It allows users to extract data from FRED.
+## Contents
 
-This is a work in progress, expecting more to come...
+- `bbgubako`: Bloomberg API tools, including Bloomberg data functions and EMSX utilities. Requires Bloomberg's `blpapi` package and access to the Bloomberg environment for live API calls.
+- `utils`: General utilities for time series, performance metrics, data conversion, and related tasks.
+- `lppls.py`: Functions for fitting and working with the Log-Periodic Power Law Singularity model.
+- `kalman_filter/` and `kalman_filter.py`: Kalman filter implementations.
+- `PCA`: Principal component analysis utilities, including robust PCA.
+- `plotify`: Plotting helpers for line, scatter, violin, and related charts.
+
+## Installation and dependencies
+
+The repository is a collection of modules and does not yet define a unified installation or dependency configuration. Individual modules may require third-party packages such as `numpy`, `pandas`, `scipy`, `matplotlib`, `statsmodels`, or Bloomberg's `blpapi`. Install the dependencies needed by the modules you use.
+
+Bloomberg API functions require a Bloomberg Terminal or other authorized Bloomberg API environment. They will not work in a standard Python environment without Bloomberg connectivity.
+
+## Status
+
+This project is under active development. Interfaces and dependencies may change.
+
+## License
+
+See [LICENSE](LICENSE).

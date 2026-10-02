@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+*.db binary
+*.db-wal binary
+*.db-shm binary
+*.db-journal binary
