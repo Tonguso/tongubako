@@ -62,7 +62,7 @@ EXCH_SUFFIX = {
     'US': '', 'LN': '.L', 'JP': '.T', 'JT': '.T', 'GR': '.DE', 'GY': '.DE',
     'FP': '.PA', 'IM': '.MI', 'SM': '.MC', 'SW': '.SW', 'NA': '.AS', 'SS': '.ST',
     'HK': '.HK', 'KS': '.KS', 'KP': '.KS', 'AU': '.AX', 'TT': '.TW', 'IN': '.NS',
-    'CH': '.SS', 'C1': '.SS', 'CG': '.SS', 'CS': '.SZ',
+    'C1': '.SS', 'CG': '.SS', 'C2': '.SZ', 'CS': '.SZ',    # 'CH' is resolved by code in china_a_suffix()
 }
 
 # bbg index ticker (without ' Index') -> OpenBB/Yahoo symbol. Verify per provider.
@@ -91,6 +91,19 @@ def to_date(x):
     return dt.datetime.strptime(s[:10], '%Y-%m-%d').date()
 
 
+def china_a_suffix(code):
+    # Bloomberg's composite 'CH' covers both Shanghai and Shenzhen, so the venue comes from the code:
+    # 6xxxxx (SH A) / 900xxx (SH B) -> .SS ; 0xxxxx, 2xxxxx (SZ B), 3xxxxx -> .SZ.
+    # Anything else (e.g. Beijing 4/8/920xxx) RAISES rather than silently fetching the wrong security.
+    if len(code) == 6 and code.isdigit():
+        if code.startswith('6') or code.startswith('900'):
+            return '.SS'
+        if code[0] in '023':
+            return '.SZ'
+    raise KeyError(f"Cannot map China code '{code}' to SS/SZ -- use the explicit exchange code "
+                   f"(CG/C1 Shanghai, CS/C2 Shenzhen) or extend settings.china_a_suffix")
+
+
 def to_openbb_symbol(bbg_ticker):
     # 'AAPL US Equity' -> 'AAPL'; '7203 JP Equity' -> '7203.T'; 'SPX Index' -> '^GSPC'.
     # Hook point: swap this for a security_master lookup (bbg_ticker -> yahoo_ticker) if
@@ -101,6 +114,8 @@ def to_openbb_symbol(bbg_ticker):
         # clean bbg symbol punctuation: 'RR/'->'RR', 'BT/A'->'BT-A', 'BRK/B'->'BRK-B'
         symbol = parts[0].replace('/', '-').rstrip('-')
         exch = parts[1].upper()
+        if exch == 'CH':                            # bbg CH = Shanghai AND Shenzhen; pick by code
+            return symbol + china_a_suffix(symbol)
         return symbol + EXCH_SUFFIX.get(exch, '')
     if key == 'Index' and len(parts) >= 2:
         idx = ' '.join(parts[:-1]).upper()
