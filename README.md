@@ -12,6 +12,7 @@
 - `kalman_filter/` and `kalman_filter.py`: Kalman filter implementations.
 - `PCA`: Principal component analysis utilities, including robust PCA.
 - `plotify`: Plotting helpers for line, scatter, violin, and related charts.
+- `shutup`: Mute and restore warnings. `please()` silences Python and C-level warnings (e.g. numpy `RuntimeWarning`) and library logging at WARNING or below; `jk()` restores the previous state. Also usable as `with mute_warnings:`.
 
 ## Installation and dependencies
 
